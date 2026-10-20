@@ -90,7 +90,9 @@ Deno.serve(async (req: Request) => {
       ) {
         return respond({ error: "PIN이 올바르지 않습니다." }, 401);
       }
-
+if (body.action === "verify") {
+  return respond({ success: true });
+}
       if (
         typeof body.zone !== "string" ||
         !allowedZones.includes(body.zone) ||
