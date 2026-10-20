@@ -2,11 +2,24 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
-Deno.serve(async (req) => {
+const allowedZones = [
+  "입구",
+  "아쿠아&정글",
+  "가재",
+  "소라게",
+  "게",
+  "투구게",
+  "새우",
+  "출구",
+  "후면 포스기",
+];
+
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -14,7 +27,10 @@ Deno.serve(async (req) => {
   const respond = (body: unknown, status = 200) =>
     new Response(JSON.stringify(body), {
       status,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json; charset=utf-8",
+      },
     });
 
   const url = Deno.env.get("SUPABASE_URL");
@@ -22,7 +38,10 @@ Deno.serve(async (req) => {
   const adminPin = Deno.env.get("ADMIN_PIN");
 
   if (!url || !key || !adminPin) {
-    return respond({ error: "서버 설정이 필요합니다." }, 500);
+    return respond(
+      { error: "서버 설정을 확인해 주세요." },
+      500,
+    );
   }
 
   const db = createClient(url, key);
@@ -30,39 +49,50 @@ Deno.serve(async (req) => {
   try {
     if (req.method === "GET") {
       const zone = new URL(req.url).searchParams.get("zone");
+
       if (zone) {
+        if (!allowedZones.includes(zone)) {
+          return respond({ error: "존재하지 않는 구역입니다." }, 400);
+        }
+
         const { data, error } = await db
           .from("manual_sections")
           .select("id, content")
           .eq("id", zone)
           .maybeSingle();
-        if (error) throw error;
+
+        if (error) {
+          console.error(error);
+          return respond({ error: "매뉴얼을 불러오지 못했습니다." }, 500);
+        }
+
         return respond({ data });
       }
+
       const { data, error } = await db
         .from("manual_sections")
         .select("id, content");
-      if (error) throw error;
+
+      if (error) {
+        console.error(error);
+        return respond({ error: "매뉴얼을 불러오지 못했습니다." }, 500);
+      }
+
       return respond({ data });
     }
 
     if (req.method === "POST") {
       const body = await req.json();
-      if (typeof body.pin !== "string" || body.pin !== adminPin) {
+
+      if (
+        typeof body.pin !== "string" ||
+        body.pin !== adminPin
+      ) {
         return respond({ error: "PIN이 올바르지 않습니다." }, 401);
       }
 
-      // PIN verification request from the website.
-      if (body.action === "verify") {
-        return respond({ success: true });
-      }
-
-      const allowedZones = [
-        "입구", "아쿠아&정글", "가재", "소라게", "게",
-        "투구게", "새우", "출구", "후면 포스기",
-      ];
-
       if (
+        typeof body.zone !== "string" ||
         !allowedZones.includes(body.zone) ||
         !body.content ||
         typeof body.content !== "object" ||
@@ -78,13 +108,18 @@ Deno.serve(async (req) => {
           content: body.content,
           updated_at: new Date().toISOString(),
         });
-      if (error) throw error;
+
+      if (error) {
+        console.error(error);
+        return respond({ error: "매뉴얼 저장에 실패했습니다." }, 500);
+      }
+
       return respond({ success: true });
     }
 
     return respond({ error: "지원하지 않는 요청입니다." }, 405);
   } catch (error) {
     console.error(error);
-    return respond({ error: "데이터 처리에 실패했습니다." }, 500);
+    return respond({ error: "데이터 처리 중 오류가 발생했습니다." }, 500);
   }
 });
