@@ -1,95 +1,90 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>아르티스 | 구역별 매뉴얼</title>
-<style>
-:root{--blue:#1e5fa8;--blue2:#eaf3ff;--blue3:#d3e5fb;--ink:#203047;--muted:#6b7b90;--line:#dce6f1;--bg:#f6f9fd;--white:#fff}
-*{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
-header{height:72px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,64px);position:sticky;top:0;z-index:5}
-.brand{font-size:22px;font-weight:800;letter-spacing:.04em;color:var(--blue)} .brand small{display:block;font-size:10px;letter-spacing:.17em;color:var(--muted);font-weight:600;margin-top:2px}
-main{max-width:1000px;margin:0 auto;padding:38px 20px 64px}
-.eyebrow{color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-h1{font-size:clamp(27px,4vw,38px);margin:10px 0 8px;letter-spacing:-.04em} .sub{color:var(--muted);margin:0 0 28px;line-height:1.65}
-.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}
-.section-label{font-size:14px;font-weight:750}
-button{font:inherit;cursor:pointer}
-.btn{border:1px solid var(--line);background:white;color:var(--blue);border-radius:11px;padding:10px 15px;font-weight:700}
-.btn.primary{background:var(--blue);color:white;border-color:var(--blue)}.btn:hover{filter:brightness(.97)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.zone{min-height:116px;border:1px solid var(--line);border-radius:16px;background:white;text-align:left;padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;box-shadow:0 4px 14px #173f6b08;transition:.15s}
-.zone:hover{border-color:#8bb7e8;transform:translateY(-2px);box-shadow:0 8px 22px #173f6b12}
-.zone .num{font-size:11px;color:#7290b2;font-weight:800;letter-spacing:.12em}.zone .name{font-size:18px;font-weight:750}.arrow{align-self:flex-end;color:var(--blue);font-size:20px;line-height:1}
-.page{display:none}.page.active{display:block}.home.active{display:block}
-.back{display:inline-flex;gap:8px;align-items:center;border:0;background:transparent;color:var(--blue);font-weight:750;padding:0;margin:0 0 22px}
-.panel{background:white;border:1px solid var(--line);border-radius:17px;padding:22px;margin:16px 0}
-.panel h2{font-size:17px;margin:0 0 14px;display:flex;align-items:center;gap:9px}.dot{width:8px;height:8px;background:var(--blue);border-radius:50%}
-.content{white-space:pre-wrap;line-height:1.8;color:#34465d;min-height:30px;overflow-wrap:anywhere}.empty{color:#94a2b4;font-size:14px}
-.photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.photos img{width:100%;height:180px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:var(--bg)}.photo-wrap{position:relative}
-.adminbar{display:none;gap:8px;flex-wrap:wrap;margin:14px 0}.adminbar.show{display:flex}
-textarea,input[type=password],input[type=text]{width:100%;border:1px solid #cbd8e7;border-radius:10px;padding:11px 12px;font:inherit;color:var(--ink);background:white}
-textarea{min-height:140px;resize:vertical;line-height:1.6}.field{margin:14px 0}.field label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}
-.editor{display:none;background:#f0f6ff;border:1px solid var(--blue3);border-radius:16px;padding:18px;margin:16px 0}.editor.show{display:block}.editor h3{margin:0 0 8px}.hint{font-size:12px;color:var(--muted);line-height:1.6}
-.upload{display:block;border:1px dashed #9ab9dd;background:white;border-radius:11px;padding:12px;text-align:center;color:var(--blue);font-size:13px;font-weight:700}
-footer{text-align:center;color:#91a0b3;font-size:12px;padding:26px 10px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#183e6b;color:white;padding:12px 17px;border-radius:12px;display:none;z-index:20;font-size:14px;max-width:90vw}
-@media(max-width:680px){main{padding-top:28px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.zone{min-height:105px;padding:16px}.zone .name{font-size:16px}.photos{grid-template-columns:repeat(2,minmax(0,1fr))}.photos img{height:140px}.panel{padding:17px}}
-@media(max-width:390px){.grid{grid-template-columns:1fr}.zone{min-height:88px;flex-direction:row;align-items:center}.zone .arrow{align-self:center}}
-</style>
-</head>
-<body>
-<header><div><div class="brand">아르티스<small>STAFF GUIDE</small></div></div><button class="btn" id="homeBtn" style="display:none" onclick="goHome()">전체 구역</button></header>
-<main>
-<section id="home" class="home active">
-<div class="eyebrow">ARTIS · STAFF MANUAL</div>
-<h1>구역별 업무 매뉴얼</h1>
-<p class="sub">확인할 구역을 선택하세요.<br>각 구역의 업무, 주의사항과 참고 사진을 한곳에서 확인할 수 있습니다.</p>
-<div class="toolbar"><div class="section-label">구역 선택 <span style="color:#91a0b3;font-weight:500">/ 09 AREAS</span></div><button class="btn primary" onclick="requestEdit()">편집</button></div>
-<div class="grid" id="zoneGrid"></div>
-<p class="hint" style="margin-top:16px">관리자 편집은 PIN 입력 후 가능합니다. 처음 PIN은 <b>1234</b>입니다. 보안을 위해 코드에서 변경하세요.</p>
-</section>
-<section id="detail" class="page">
-<button class="back" onclick="goHome()">← 전체 구역으로</button>
-<div class="eyebrow">ARTIS · AREA GUIDE</div><h1 id="detailTitle">구역</h1><p class="sub">업무 내용과 주의사항을 확인한 뒤 업무를 진행하세요.</p>
-<div id="adminBar" class="adminbar"><button class="btn primary" onclick="openEditor()">내용 편집</button><button class="btn" onclick="changePin()">PIN 변경</button><button class="btn" onclick="logout()">관리자 로그아웃</button></div>
-<div class="panel"><h2><span class="dot"></span>할 일</h2><div id="tasksView" class="content empty">아직 등록된 내용이 없습니다.</div></div>
-<div class="panel"><h2><span class="dot" style="background:#6d9ed7"></span>주의사항</h2><div id="cautionsView" class="content empty">아직 등록된 내용이 없습니다.</div></div>
-<div class="panel"><h2><span class="dot" style="background:#a8c8ed"></span>참고 자료</h2><div id="photosView" class="photos"></div><div id="photosEmpty" class="empty">아직 등록된 사진이 없습니다.</div></div>
-<div id="editor" class="editor">
-<h3>구역 내용 편집</h3><p class="hint">줄바꿈을 사용해 항목을 나누세요. 사진은 여러 장 선택할 수 있습니다.</p>
-<div class="field"><label for="tasksInput">할 일</label><textarea id="tasksInput" placeholder="예: 개장 전 시설과 장비를 확인합니다."></textarea></div>
-<div class="field"><label for="cautionsInput">주의사항</label><textarea id="cautionsInput" placeholder="예: 체험 전 이용 방법과 안전 수칙을 안내합니다."></textarea></div>
-<div class="field"><label>참고 사진 업로드</label><label class="upload">＋ 사진 선택<input id="photoInput" type="file" accept="image/*" multiple hidden></label><div id="pendingPhotos" class="hint" style="margin-top:8px">새로 선택한 사진이 없습니다.</div></div>
-<div class="field"><label>기존 사진</label><div id="existingPhotos" class="photos"></div><p class="hint">사진 아래 삭제 버튼으로 기존 사진을 제거할 수 있습니다.</p></div>
-<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" onclick="saveEditor()">저장</button><button class="btn" onclick="closeEditor()">취소</button></div>
-</div>
-</section>
-<footer>ARTIS STAFF GUIDE · 구역별 업무 확인용</footer>
-</main><div id="toast" class="toast"></div>
-<script>
-const zones=["입구","아쿠아&정글","가재","소라게","게","투구게","새우","출구","후면 포스기"];
-const DEFAULT_PIN="1234";
-let pin=localStorage.getItem("artis_pin")||DEFAULT_PIN;
-let data={}; try{data=JSON.parse(localStorage.getItem("artis_manual")||"{}")}catch(e){data={}}
-let currentZone="",isAdmin=false,pendingFiles=[],removedPhotos=[];
-const grid=document.getElementById("zoneGrid");
-zones.forEach((z,i)=>{const b=document.createElement("button");b.className="zone";b.innerHTML=`<span class="num">AREA ${(i+1).toString().padStart(2,"0")}</span><span class="name">${z}</span><span class="arrow">↗</span>`;b.onclick=()=>openZone(z);grid.appendChild(b)});
-function getZone(z){return data[z]||{tasks:"",cautions:"",photos:[]}}
-function saveData(){try{localStorage.setItem("artis_manual",JSON.stringify(data));return true}catch(e){toast("저장 공간이 부족합니다. 사진 용량을 줄여 다시 시도하세요.");return false}}
-function openZone(z){currentZone=z;document.getElementById("home").classList.remove("active");document.getElementById("detail").classList.add("active");document.getElementById("homeBtn").style.display="block";document.getElementById("detailTitle").textContent=z;document.getElementById("adminBar").classList.toggle("show",isAdmin);closeEditor();renderZone()}
-function renderZone(){const d=getZone(currentZone);setContent("tasksView",d.tasks);setContent("cautionsView",d.cautions);const pv=document.getElementById("photosView");pv.innerHTML="";(d.photos||[]).forEach(src=>{const wrap=document.createElement("div");wrap.className="photo-wrap";const img=document.createElement("img");img.src=src;img.alt=currentZone+" 참고 사진";wrap.appendChild(img);pv.appendChild(wrap)});document.getElementById("photosEmpty").style.display=(d.photos||[]).length?"none":"block"}
-function setContent(id,value){const el=document.getElementById(id);el.textContent=value||"";el.classList.toggle("empty",!value);if(!value)el.textContent="아직 등록된 내용이 없습니다."}
-function goHome(){closeEditor();document.getElementById("detail").classList.remove("active");document.getElementById("home").classList.add("active");document.getElementById("homeBtn").style.display="none"}
-function requestEdit(){const entered=prompt("관리자 PIN을 입력하세요.");if(entered===null)return;if(entered===pin){isAdmin=true;document.getElementById("adminBar").classList.add("show");toast("관리자 편집 권한이 활성화되었습니다.");}else toast("PIN이 올바르지 않습니다.")}
-function logout(){isAdmin=false;document.getElementById("adminBar").classList.remove("show");closeEditor();toast("관리자 로그아웃 완료")}
-function openEditor(){if(!isAdmin)return;const d=getZone(currentZone);document.getElementById("tasksInput").value=d.tasks||"";document.getElementById("cautionsInput").value=d.cautions||"";pendingFiles=[];removedPhotos=[];document.getElementById("photoInput").value="";document.getElementById("pendingPhotos").textContent="새로 선택한 사진이 없습니다.";renderExisting();document.getElementById("editor").classList.add("show")}
-function closeEditor(){document.getElementById("editor").classList.remove("show");pendingFiles=[];removedPhotos=[]}
-function renderExisting(){const el=document.getElementById("existingPhotos");el.innerHTML="";(getZone(currentZone).photos||[]).forEach((src,i)=>{if(removedPhotos.includes(i))return;const w=document.createElement("div");const img=document.createElement("img");img.src=src;const b=document.createElement("button");b.className="btn";b.style.marginTop="6px";b.textContent="사진 삭제";b.onclick=()=>{removedPhotos.push(i);renderExisting()};w.append(img,b);el.appendChild(w)})}
-document.getElementById("photoInput").addEventListener("change",async e=>{const files=Array.from(e.target.files||[]);for(const f of files){if(!f.type.startsWith("image/"))continue;try{const compressed=await compressImage(f);pendingFiles.push(compressed)}catch(err){toast("일부 사진을 불러오지 못했습니다.")}}document.getElementById("pendingPhotos").textContent=pendingFiles.length?`새 사진 ${pendingFiles.length}장 선택됨`:"새로 선택한 사진이 없습니다."});
-function compressImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=reject;reader.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext("2d").drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL("image/jpeg",.78))};img.src=reader.result};reader.readAsDataURL(file)})}
-function saveEditor(){if(!isAdmin)return;const old=getZone(currentZone),photos=(old.photos||[]).filter((_,i)=>!removedPhotos.includes(i));data[currentZone]={tasks:document.getElementById("tasksInput").value.trim(),cautions:document.getElementById("cautionsInput").value.trim(),photos:photos.concat(pendingFiles)};if(saveData()){renderZone();closeEditor();toast("내용을 저장했습니다.")}}
-function changePin(){if(!isAdmin)return;const old=prompt("현재 PIN을 입력하세요.");if(old===null)return;if(old!==pin){toast("현재 PIN이 올바르지 않습니다.");return}const next=prompt("새 PIN을 입력하세요. 숫자 4~12자리");if(next===null)return;if(!/^\d{4,12}$/.test(next)){toast("PIN은 숫자 4~12자리로 입력하세요.");return}pin=next;localStorage.setItem("artis_pin",pin);toast("PIN을 변경했습니다.")}
-let toastTimer;function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display="none",2600)}
-</script>
-</body></html>
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+};
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  const respond = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+
+  const url = Deno.env.get("SUPABASE_URL");
+  const key = Deno.env.get("MY_SECRET_KEY");
+  const adminPin = Deno.env.get("ADMIN_PIN");
+
+  if (!url || !key || !adminPin) {
+    return respond({ error: "서버 설정이 필요합니다." }, 500);
+  }
+
+  const db = createClient(url, key);
+
+  try {
+    if (req.method === "GET") {
+      const zone = new URL(req.url).searchParams.get("zone");
+      if (zone) {
+        const { data, error } = await db
+          .from("manual_sections")
+          .select("id, content")
+          .eq("id", zone)
+          .maybeSingle();
+        if (error) throw error;
+        return respond({ data });
+      }
+      const { data, error } = await db
+        .from("manual_sections")
+        .select("id, content");
+      if (error) throw error;
+      return respond({ data });
+    }
+
+    if (req.method === "POST") {
+      const body = await req.json();
+      if (typeof body.pin !== "string" || body.pin !== adminPin) {
+        return respond({ error: "PIN이 올바르지 않습니다." }, 401);
+      }
+
+      // PIN verification request from the website.
+      if (body.action === "verify") {
+        return respond({ success: true });
+      }
+
+      const allowedZones = [
+        "입구", "아쿠아&정글", "가재", "소라게", "게",
+        "투구게", "새우", "출구", "후면 포스기",
+      ];
+
+      if (
+        !allowedZones.includes(body.zone) ||
+        !body.content ||
+        typeof body.content !== "object" ||
+        Array.isArray(body.content)
+      ) {
+        return respond({ error: "잘못된 요청입니다." }, 400);
+      }
+
+      const { error } = await db
+        .from("manual_sections")
+        .upsert({
+          id: body.zone,
+          content: body.content,
+          updated_at: new Date().toISOString(),
+        });
+      if (error) throw error;
+      return respond({ success: true });
+    }
+
+    return respond({ error: "지원하지 않는 요청입니다." }, 405);
+  } catch (error) {
+    console.error(error);
+    return respond({ error: "데이터 처리에 실패했습니다." }, 500);
+  }
+});
